@@ -135,12 +135,12 @@ public class UserInterface {
 
     public void processAddVehicleRequest() {
         System.out.println("Input the following data\nVehicle Identification Number(VIN): ");
-        int addVehicleVIN;
-        addVehicleVIN = Integer.parseInt(scanner.nextLine());
+        int addVehicleVIN = scanner.nextInt();
+        scanner.nextLine();
 
         System.out.println("Year:");
-        int addVehicleYear;
-        addVehicleYear = Integer.parseInt(scanner.nextLine());
+        int addVehicleYear = scanner.nextInt();
+        scanner.nextLine();
 
         System.out.println("Make:");
         String addVehicleMake = scanner.nextLine();
@@ -155,14 +155,17 @@ public class UserInterface {
         String addVehicleColor = scanner.nextLine();
 
         System.out.println("Mileage:");
-        int addVehicleMileage;
-        addVehicleMileage = Integer.parseInt(scanner.nextLine());
+        int addVehicleMileage = scanner.nextInt();
+        scanner.nextLine();
 
         System.out.println("Price: ");
         double addVehiclePrice = scanner.nextDouble();
+        scanner.nextLine();
 
         Vehicle addVehicle = new Vehicle(addVehicleVIN, addVehicleYear, addVehicleMake, addVehicleModel, addVehicleType, addVehicleColor, addVehicleMileage, addVehiclePrice);
-        dealership.addVehicle(addVehicle);
+        this.dealership.addVehicle(addVehicle);
+        DealershipFileManager.saveDealership(this.dealership);
+
 
     }
 
@@ -170,7 +173,12 @@ public class UserInterface {
         System.out.println("Enter VIN to remove vehicle: ");
         int vin = scanner.nextInt();
         scanner.nextLine();
+        //Remove vehicle with given VIN
         dealership.removeVehicle(vin);
+        //Save updated inventory after removal
+        DealershipFileManager.saveDealership(this.dealership);
+        //Display updated inventory after removal
+        displayVehicles(this.dealership.getInventory());
     }
 
     public void helperMenu() {

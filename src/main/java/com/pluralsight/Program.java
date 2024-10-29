@@ -8,3 +8,4 @@ public class Program {
         userInterface.display();
     }
 }
+//check methods to check car make/model

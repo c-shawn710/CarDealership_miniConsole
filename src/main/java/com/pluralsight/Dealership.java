@@ -65,7 +65,7 @@ public class Dealership {
     public List<Vehicle> getVehicleByMakeModel(String make, String model) {
         List<Vehicle> result = new ArrayList<>();
         for(Vehicle v : inventory) {
-            if(v.getMake().equalsIgnoreCase(make) && v.getMake().equalsIgnoreCase(model)) {
+            if(v.getMake().equalsIgnoreCase(make) && v.getModel().equalsIgnoreCase(model)) {
                 result.add(v);
             }
         }
