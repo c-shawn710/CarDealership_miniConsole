@@ -1,5 +1,6 @@
 package com.pluralsight;
 
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,12 +9,14 @@ public class Dealership {
     private String address;
     private String phone;
     private ArrayList<Vehicle> inventory;
+    private DealershipFileManager fileManager;
 
     public Dealership(String name, String address, String phone) {
         this.name = name;
         this.address = address;
         this.phone = phone;
         this.inventory = new ArrayList<>();
+        this.fileManager = new DealershipFileManager();
     }
 
     public String getName() {
@@ -38,6 +41,14 @@ public class Dealership {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public ArrayList<Vehicle> getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(ArrayList<Vehicle> inventory) {
+        this.inventory = inventory;
     }
 
     //Get vehicles within a price range
@@ -107,9 +118,15 @@ public class Dealership {
 
     public void addVehicle(Vehicle vehicle) {
         inventory.add(vehicle);
+        //Save vehicle data to the CSV file
+        fileManager.saveDealership(this);
     }
 
-    public void removeVehicle(Vehicle vehicle) {
-        inventory.remove(vehicle);
+    public void removeVehicle(int vin) {
+        for(Vehicle v : inventory) {
+            if(v.getVin() == vin){
+                inventory.remove(v);
+            }
+        }
     }
 }

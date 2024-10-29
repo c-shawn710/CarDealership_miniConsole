@@ -1,34 +1,23 @@
 package com.pluralsight;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
+import java.util.List;
 
 public class DealershipFileManager {
     //Method to read from file
-    public Dealership getDealership() {
-        Dealership dealership = new Dealership("D & B Used Cars", "111 Old Benbrook Rd", "817-555-5555");
+    public static Dealership getDealership() {
+        Dealership dealership;
         try {
             FileReader fileReader = new FileReader("inventory.csv");
             BufferedReader buffReader = new BufferedReader(fileReader);
+            String[] dealershipParts = buffReader.readLine().split("\\|");
+            dealership = new Dealership(dealershipParts[0], dealershipParts[1], dealershipParts[2]);
             String line;
 
             while ((line = buffReader.readLine()) != null) {
                 String[] vehicleData = line.split("\\|");
-                if(vehicleData.length == 8) {
-                    int vin = Integer.parseInt(vehicleData[0]);
-                    int year = Integer.parseInt(vehicleData[1]);
-                    String make = vehicleData[2];
-                    String model = vehicleData[3];
-                    String type = vehicleData[4];
-                    String color = vehicleData[5];
-                    int mileage = Integer.parseInt(vehicleData[6]);
-                    double price = Double.parseDouble(vehicleData[7]);
-
-                    Vehicle vehicle = new Vehicle(vin, year, make, model, type, color, mileage, price);
-                    dealership.addVehicle(vehicle);
-                }
+                Vehicle vehicle = new Vehicle(Integer.parseInt(vehicleData[0]), Integer.parseInt(vehicleData[1]), vehicleData[2], vehicleData[3], vehicleData[4], vehicleData[5], Integer.parseInt(vehicleData[6]), Double.parseDouble(vehicleData[7]));
+                dealership.addVehicle(vehicle);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -37,12 +26,16 @@ public class DealershipFileManager {
     }
 
     public void saveDealership(Dealership dealership) {
-        //Method to write to file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("inventory.csv", true))) {
-            writer.append()
-
-        } catch (Exception e) {
-            System.out.println("Error writing to file");
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("inventory.csv", true));
+            //Read the first line of the CSV which is the dealership info
+            bufferedWriter.write(dealership.getName() + "|" + dealership.getAddress() + "|" + dealership.getPhone() + "\n");
+            for(Vehicle v : dealership.getInventory()) {
+                bufferedWriter.write(v.csvFormatter());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         }
     }
-}
+
