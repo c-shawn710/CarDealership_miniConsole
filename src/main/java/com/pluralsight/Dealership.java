@@ -123,10 +123,23 @@ public class Dealership {
     }
 
     public void removeVehicle(int vin) {
+        Vehicle toBeRemoved = null;
         for(Vehicle v : inventory) {
             if(v.getVin() == vin){
-                inventory.remove(v);
+                toBeRemoved = v;
             }
         }
+        if(toBeRemoved != null) {
+            inventory.remove(toBeRemoved);
+        }
+    }
+
+    public Vehicle getVehicleVIN(int vin) {
+        for(Vehicle v : inventory) {
+            if(v.getVin() == vin) {
+                return v;
+            }
+        }
+        return null;
     }
 }

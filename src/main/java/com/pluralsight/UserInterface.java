@@ -49,6 +49,9 @@ public class UserInterface {
                 case 9:
                     processRemoveVehicleRequest();
                     break;
+                case 10:
+                    processCreateContract();
+                    break;
                 case 99:
                     System.out.println("Exiting application...");
                     System.exit(0);
@@ -192,6 +195,7 @@ public class UserInterface {
         System.out.println("7) List ALL vehicles");
         System.out.println("8) Add a vehicle");
         System.out.println("9) Remove a vehicle");
+        System.out.println("10) Make a contract");
         System.out.println("99) Quit");
     }
 
@@ -203,5 +207,43 @@ public class UserInterface {
                 System.out.println(vehicle);
             }
         }
+    }
+
+    public void processCreateContract() {
+        //Sales or lease
+        System.out.println("Would you like to buy or lease?: ");
+        String saleOrLease = scanner.nextLine();
+        System.out.println("Enter your name: ");
+        String customerName = scanner.nextLine();
+        System.out.println("Enter your email: ");
+        String customerEmail = scanner.nextLine();
+        System.out.println("Date of contract: ");
+        String date = scanner.nextLine();
+        //Take vin as string then parse
+        System.out.println("Enter VIN: ");
+        String vin = scanner.nextLine();
+        Vehicle vehicle = dealership.getVehicleVIN(Integer.parseInt(vin));
+
+        Contract contract = createContract(saleOrLease, date, customerName, customerEmail, vehicle);
+
+        ContractFileManager.saveContract(contract);
+        dealership.removeVehicle(Integer.parseInt(vin));
+        DealershipFileManager.saveDealership(dealership);
+    }
+
+    public Contract createContract(String saleOrLease, String date, String name, String email, Vehicle vehicle) {
+            boolean finance;
+            Contract contract = null;
+            if (saleOrLease.equalsIgnoreCase("sale")) {
+                System.out.println("Would you like to finance? Y / N");
+                String financeChoice = scanner.nextLine();
+                finance = financeChoice.equalsIgnoreCase("y");
+                contract = new SalesContract(date, name, email, vehicle, finance);
+            } else if (saleOrLease.equalsIgnoreCase("lease")) {
+                contract = new LeaseContract(date, name, email, vehicle);
+            } else {
+                System.out.println("We do not offer " + saleOrLease);
+            }
+            return contract;
     }
 }
